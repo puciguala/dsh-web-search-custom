@@ -1,0 +1,12 @@
+- insert:
+    # The base profile owns the core Web service. Only this provider belongs
+    # to the bundle; its enable switch selects the search backend at runtime.
+    - id: dsh-web-search-custom
+      name: dsh-web-search-custom
+      config:
+        enabled: "on"
+        provider: current
+        modelProvider: ""
+        model: ""
+        reasoningEffort: ""
+        searchTool: web_search

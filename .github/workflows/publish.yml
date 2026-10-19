@@ -1,0 +1,55 @@
+name: Publish to npm
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    # Publish stable GitHub Releases; drafts and prereleases do not publish.
+    if: github.event.release.prerelease == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out the release tag
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.release.tag_name }}
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          package-manager-cache: false
+
+      - name: Use an npm CLI with trusted publishing support
+        run: npm install --global npm@11 --registry https://registry.npmjs.org
+
+      - name: Verify the release version and repository
+        run: node scripts/check-release.mjs
+        env:
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+
+      - name: Install locked dependencies
+        run: npm ci --ignore-scripts
+
+      - name: Check, test and preview package contents
+        # prepack runs npm run check and npm test.
+        run: npm pack --dry-run
+
+      - name: Publish with npm trusted publishing
+        # The previous step checked the same checkout; avoid repeating prepack.
+        # Authentication comes from OIDC, so no NPM_TOKEN secret is required.
+        run: npm publish --access public --provenance --ignore-scripts --registry https://registry.npmjs.org

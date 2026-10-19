@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "自定义网页搜索",
+    "description": "复用 DSH 已配置的模型提供商和凭据，通过 OpenAI Responses 进行网页搜索。"
+  }
+}

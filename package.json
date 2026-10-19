@@ -1,0 +1,50 @@
+{
+  "name": "dsh-web-search-custom",
+  "version": "1.0.0",
+  "description": "Use configured model providers for OpenAI Responses web search in DeepSeek Harness",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": { "default": "./lib/index.js" },
+    "./client": "./lib/client.js",
+    "./cordis.patch.yml": "./cordis.patch.yml",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": ["lib/index.js", "lib/client.js", "cordis.patch.yml", "locale/*.json", "icon.svg", "README.md", "README.zh-CN.md", "LICENSE"],
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/puciguala/dsh-web-search-custom.git"
+  },
+  "homepage": "https://github.com/puciguala/dsh-web-search-custom#readme",
+  "bugs": { "url": "https://github.com/puciguala/dsh-web-search-custom/issues" },
+  "keywords": ["dsh", "deepseek-harness", "cordis", "plugin", "web-search", "openai", "responses-api"],
+  "publishConfig": { "access": "public" },
+  "engines": {
+    "node": ">=22",
+    "dsh": ">=0.2.1-rc.2"
+  },
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-settings",
+        "@deepseek-ai/dsh-client-ui-model-selection",
+        "@deepseek-ai/dsh-client-ui-slots",
+        "@deepseek-ai/dsh-api-remotes"
+      ]
+    }
+  },
+  "dependencies": {
+    "@deepseek-ai/schemastery": "^3.18.5"
+  },
+  "scripts": {
+    "check": "node --check lib/index.js && node --check lib/client.js && node scripts/check-package.mjs",
+    "test": "node --test test/*.test.js",
+    "prepack": "npm run check && npm test"
+  }
+}

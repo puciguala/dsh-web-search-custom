@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Custom Web Search",
+    "description": "Reuse configured DSH model providers and credentials for OpenAI Responses web search."
+  }
+}
